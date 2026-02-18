@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Image } from 'expo-image';
 import { Dimensions, StyleSheet, Text, View, ScrollView } from 'react-native';
@@ -14,6 +14,10 @@ export default function App() {
   const [jsonRaw, setJsonRaw] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const imageUri = useMemo(
+    () => `${IMAGE_URI}?t=${Date.now()}`,
+    []
+  );
 
   useEffect(() => {
     fetch(JSON_URI)
@@ -45,7 +49,7 @@ export default function App() {
           contentContainerStyle={styles.imageScrollContent}
         >
           <Image
-            source={{ uri: IMAGE_URI }}
+            source={{ uri: imageUri }}
             style={[styles.image, { height: IMAGE_HEIGHT, width: IMAGE_HEIGHT * (1400 / 220) }]}
             contentFit="contain"
           />
@@ -75,10 +79,13 @@ const styles = StyleSheet.create({
   },
   imageScroll: {
     marginBottom: 16,
-    alignSelf: 'stretch',
+    alignSelf: 'flex-start',
+    width: '100%',
   },
   imageScrollContent: {
     flexGrow: 0,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   image: {
     marginBottom: 0,
